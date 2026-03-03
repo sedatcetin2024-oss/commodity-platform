@@ -1,17 +1,25 @@
 <?php
+// bootstrap.php
 
-// Bootstrap file for the Commodity Platform
-
-// Autoload dependencies
-require __DIR__ . '/vendor/autoload.php';
-
-// Start the session
+// Start session
 session_start();
 
-// Initialize configuration
-require __DIR__ . '/config/config.php';
+// Error handling
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-// Load routes
-require __DIR__ . '/routes/web.php';
+// Database connection
+try {
+    $pdo = new PDO('mysql:host=hostname;dbname=database_name', 'username', 'password');
+    // Set the PDO error mode to exception
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+}
 
+// Autoload classes
+spl_autoload_register(function ($class_name) {
+    include 'path/to/classes/' . $class_name . '.php';
+});
 ?>
